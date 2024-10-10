@@ -2,7 +2,7 @@ import pytest
 
 from colorama import Fore, Style
 from dateutil.parser import isoparse
-from backend_logic import get_db_session, get_kpis, get_customer_segments, get_monthly_revenue, get_top_customers, get_product_category_performance, get_customer_satisfaction, get_churn_risk, get_rfm_segmentation
+from backend_logic import get_kpis, get_customer_segments, get_monthly_revenue, get_top_customers, get_product_category_performance, get_customer_satisfaction, get_churn_risk, get_rfm_segmentation
 
 def is_valid_datetime(date_string):
     try:

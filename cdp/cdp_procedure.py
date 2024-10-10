@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 
 load_dotenv()  # load environment variables
 
-
 async def init_connection_pool(connector):
     async def getconn():
         conn = await connector.connect_async(
@@ -25,7 +24,6 @@ async def init_connection_pool(connector):
         async_creator=getconn,
     )
     return pool
-
 
 async def create_and_run_procedure(Session):
     procedure_sql = """
@@ -228,7 +226,6 @@ async def create_and_run_procedure(Session):
             print(f"An error occurred: {e}")
             await session.rollback()
 
-
 async def main():
     print("Trying to connect...")
 
@@ -239,16 +236,16 @@ async def main():
     try:
         print("Connection established.")
         await create_and_run_procedure(Session)
-
+        return True
     except Exception as e:
         print(f"Unable to establish connection: {e}")
+        return False
 
     finally:
         if engine:
             await engine.dispose()
             print("Connection pool disposed.")
         await connector.close_async()
-
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -1,0 +1,68 @@
+graph TD
+    A[Client] <-->|HTTPS Request/Response| M[Cloud Armor]
+    M <-->|HTTPS Request/Response| B(Cloud Load Balancer<br>SSL Termination)
+    B <-->|HTTP Request/Response| C[Cloud CDN]
+    C <-->|HTTP Request/Response| D[App Engine - Frontend<br>Gunicorn + Uvicorn]
+    C <-->|HTTP Request/Response| E[Cloud Run - Backend API<br>Gunicorn + Uvicorn]
+    E <-->|SSL| F[(Cloud SQL - PostgreSQL)]
+    E <-->|SSL| G[(Cloud Firestore)]
+    E <-->|SSL| H[Pub/Sub]
+    H <-->|SSL| I[Cloud Functions]
+    I <-->|SSL| J[(BigQuery)]
+    K[Cloud Scheduler] -->|SSL| H
+    L[Cloud Operations<br>Monitoring & Logging] --> E
+    L --> D
+    L --> B
+    L --> C
+    L --> H
+    L --> I
+    L --> F
+    L --> G
+    N[Secret Manager] <-->|SSL| E
+    N <-->|SSL| D
+    O[Identity Platform] <-->|SSL| E
+    O <-->|SSL| D
+    P[Cloud KMS] <-->|SSL| N
+    Q[VPC Network] -.->|Contains| E
+    Q -.->|Contains| F
+    Q -.->|Contains| G
+    Q -.->|Contains| H
+    Q -.->|Contains| I
+
+    subgraph "Data Processing"
+    H
+    I
+    J
+    end
+    subgraph "Compute"
+    D
+    E
+    end
+    subgraph "Data Storage"
+    F
+    G
+    end
+    subgraph "Security & Configuration"
+    N
+    O
+    P
+    Q
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+    style C fill:#dfd,stroke:#333,stroke-width:2px
+    style D fill:#ddf,stroke:#333,stroke-width:2px
+    style E fill:#ddf,stroke:#333,stroke-width:2px
+    style F fill:#fdd,stroke:#333,stroke-width:2px
+    style G fill:#fdd,stroke:#333,stroke-width:2px
+    style H fill:#dff,stroke:#333,stroke-width:2px
+    style I fill:#dff,stroke:#333,stroke-width:2px
+    style J fill:#fdd,stroke:#333,stroke-width:2px
+    style K fill:#ffd,stroke:#333,stroke-width:2px
+    style L fill:#dff,stroke:#333,stroke-width:2px
+    style M fill:#fdf,stroke:#333,stroke-width:2px
+    style N fill:#fdf,stroke:#333,stroke-width:2px
+    style O fill:#fdf,stroke:#333,stroke-width:2px
+    style P fill:#fdf,stroke:#333,stroke-width:2px
+    style Q fill:#fdf,stroke:#333,stroke-width:2px

@@ -34,15 +34,41 @@ resource "google_compute_instance" "app_instance" {
     sudo chmod 666 /var/run/docker.sock
     mkdir /home/msingh/projects && git clone https://github.com/grid-bot-dev/innovation_day_event_monorepo.git /home/msingh/projects/
     mv /home/msingh/.env /home/msingh/projects/
+    sudo apt-get install unzip
+    unzip /home/msingh/.config.zip
     cd /home/msingh/projects/
     docker compose up -d 
 EOF
 
   tags = ["http-server", "https-server"]
 
+  provisioner "file" {
+    source      = "/Users/msingh/Desktop/cred/.env"
+    destination = "/home/msingh/.env"
+
+    connection {
+      type     = "ssh"
+      user     = "msingh"
+      private_key = file("~/.ssh/id_rsa")
+      host     = self.network_interface[0].access_config[0].nat_ip
+    }
+  }
+
+  provisioner "file" {
+    source      = "/Users/msingh/Desktop/cred/.config.zip"
+    destination = "/home/msingh/.config.zip"
+
+    connection {
+      type     = "ssh"
+      user     = "msingh"
+      private_key = file("~/.ssh/id_rsa")
+      host     = self.network_interface[0].access_config[0].nat_ip
+    }
+  }
+  
 }
 
-resource "google_compute_firewall" "allow_http" {
+resource "google_compute_firewall" "allow_http_1" {
   name    = "allow-http-1"
   network = "default"
 

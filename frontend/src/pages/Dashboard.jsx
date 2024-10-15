@@ -47,10 +47,10 @@ const Dashboard = () => {
     if (rfmSegmentation.length > 0) createRFMSegmentationChart();
   }, [customerSegments, monthlyRevenue, productPerformance, satisfactionScore, churnRisk, rfmSegmentation]);
 
-  const domain="http://localhost:800"
+  const domain="http://localhost:80/api"
   const fetchKPIs = async () => {
     try {
-      const response = await fetch('http://localhost:8000/kpis');
+      const response = await fetch('http://localhost:80/api/kpis');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

@@ -47,10 +47,10 @@ const Dashboard = () => {
     if (rfmSegmentation.length > 0) createRFMSegmentationChart();
   }, [customerSegments, monthlyRevenue, productPerformance, satisfactionScore, churnRisk, rfmSegmentation]);
 
-  const domain="http://localhost:80/api"
+  // const domain="http://localhost:80"
   const fetchKPIs = async () => {
     try {
-      const response = await fetch('http://localhost:80/api/kpis');
+      const response = await fetch('/api/kpis');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -65,7 +65,7 @@ const Dashboard = () => {
 
   const fetchCustomerSegments = async () => {
     try {
-      const response = await fetch(domain+'/customer_segments');
+      const response = await fetch('/api/customer_segments');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -78,7 +78,7 @@ const Dashboard = () => {
 
   const fetchMonthlyRevenue = async () => {
     try {
-      const response = await fetch(domain+'/monthly_revenue');
+      const response = await fetch('/api/monthly_revenue');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -91,7 +91,7 @@ const Dashboard = () => {
 
   const fetchTopCustomers = async () => {
     try {
-      const response = await fetch(domain+'/top_customers');
+      const response = await fetch('/api/top_customers');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -104,7 +104,7 @@ const Dashboard = () => {
 
   const fetchProductPerformance = async () => {
     try {
-      const response = await fetch(domain+'/product_category_performance');
+      const response = await fetch('/api/product_category_performance');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -117,7 +117,7 @@ const Dashboard = () => {
 
   const fetchCustomerSatisfaction = async () => {
     try {
-      const response = await fetch(domain+'/customer_satisfaction');
+      const response = await fetch('/api/customer_satisfaction');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -130,7 +130,7 @@ const Dashboard = () => {
 
   const fetchChurnRisk = async () => {
     try {
-      const response = await fetch(domain+'/churn_risk');
+      const response = await fetch('/api/churn_risk');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -143,7 +143,7 @@ const Dashboard = () => {
 
   const fetchRFMSegmentation = async () => {
     try {
-      const response = await fetch(domain+'/rfm_segmentation');
+      const response = await fetch('/api/rfm_segmentation');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

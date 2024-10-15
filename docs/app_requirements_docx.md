@@ -4,397 +4,495 @@
 
 ### Project Name and Heading
 
-# CustomerInsight360
+**Project Name: E-Commerce Insights Hub**
 
-*Unifying customer data for actionable insights and personalized experiences*
+*Empowering data-driven decisions through comprehensive customer analytics*
 
 ### Google SSO Authentication
 
-The CDP application will implement Google Single Sign-On (SSO) authentication using the @react-oauth/google library. This process will ensure secure and seamless access for authorized users.
+The E-Commerce Insights Hub will implement Google Single Sign-On (SSO) authentication using the @react-oauth/google library. This process will ensure secure and seamless access for authorized users.
 
 Authentication Flow:
 1. User clicks "Sign in with Google" button on the login page
 2. Google OAuth consent screen appears
 3. User grants permission
-4. Application receives OAuth tokens
-5. Backend verifies tokens and creates a session
-6. User is redirected to the main dashboard
-
-Implementation Details:
-- Use GoogleLogin component from @react-oauth/google
-- Configure OAuth 2.0 client ID in Google Cloud Console
-- Implement token verification on the backend
-- Handle error scenarios (e.g., network issues, invalid tokens)
-- Design a clean, minimalist login interface with Google brand guidelines
+4. Application receives authentication token
+5. Backend validates token and creates a session
 
 Error Handling:
-- Display user-friendly error messages
-- Provide option to retry authentication
-- Log detailed errors for debugging
+- Implement try-catch blocks for API calls
+- Display user-friendly error messages for failed authentication attempts
+- Log detailed error information for debugging
 
 Security Considerations:
 - Use HTTPS for all communications
-- Implement proper token storage and management
-- Regular security audits and updates
+- Implement token expiration and refresh mechanisms
+- Store sensitive data (e.g., tokens) securely using HTTP-only cookies
 
-Login Interface Design:
-- Centered login form with CDP logo
-- "Sign in with Google" button prominently displayed
-- Empty input fields for email and password (for future non-SSO options)
-- Clear error message area below the form
+Authentication Interface Design:
+- Minimalist login page with company logo
+- Prominent "Sign in with Google" button using Ant Design components
+- Empty input fields for email and password (for future non-Google authentication options)
+
+```json
+{
+  "authEndpoint": "/api/auth/google",
+  "tokenValidationEndpoint": "/api/auth/validate",
+  "logoutEndpoint": "/api/auth/logout"
+}
+```
 
 ## Page 2: Dashboard Design and Components
 
 ### Dashboard Layout and Structure
 
-The CDP dashboard will utilize a responsive 12-column grid system to ensure optimal layout across various screen sizes. The layout will consist of the following elements:
+The dashboard will utilize a responsive 12-column grid system, ensuring optimal display across various device sizes. The layout will consist of:
 
-1. Header (1 row, 12 columns):
-   - Logo (2 columns)
-   - Navigation menu (8 columns)
-   - User profile and settings (2 columns)
+1. Header:
+   - Company logo (left-aligned)
+   - User profile and logout button (right-aligned)
 
-2. Sidebar (12 rows, 2 columns):
-   - Main menu items
-   - Collapsible for mobile view
+2. Main Navigation:
+   - Vertical sidebar with collapsible menu items
+   - Icons and labels for each menu option
 
-3. Main Content Area (12 rows, 10 columns):
-   - Flexible grid for dashboard components
-   - Responsive breakpoints for tablet and mobile views
+3. Content Area:
+   - Occupies the remaining space
+   - Contains all data visualization components
+   - Implements a card-based layout for individual components
 
-4. Footer (1 row, 12 columns):
+4. Footer:
    - Copyright information
-   - Quick links
+   - Links to documentation and support
 
-The navigation design will include:
-- Main menu in the sidebar with icons and labels
-- Sub-navigation as dropdown menus or tabs within each section
-- Breadcrumb navigation for deep-linked pages
-
-Screen real estate allocation:
-- KPIs: 2 rows, 12 columns (4 KPIs, 3 columns each)
-- Charts and graphs: 8 rows, 12 columns (2 columns for smaller charts, 4-6 columns for larger visualizations)
-- Tables and detailed data: 4 rows, 12 columns
+Responsive Breakpoints:
+- Desktop: 1200px and above (full 12-column layout)
+- Tablet: 768px to 1199px (8-column layout)
+- Mobile: Below 768px (4-column layout, stacked components)
 
 ### Key Dashboard Components and API Mapping
 
 #### a. Key Performance Indicators (KPIs)
 
-Visual Description: Four card-style components, each displaying a single KPI with a large number, descriptive label, and trend indicator.
+Visual Description:
+- Four card-style components displaying crucial metrics
+- Each card features a large number, descriptive label, and trend indicator
 
-Data Visualization: Large typography for the main metric, with a small arrow icon indicating trend.
+Data Visualization:
+- Use Ant Design's Statistic component for number display
+- Implement small sparkline charts using Plotly.js for trend visualization
 
-Interactivity: Hover effect to show percentage change, click to drill down into detailed view.
+Interactivity:
+- Hover effect to highlight the card
+- Click to expand and show detailed breakdown
 
-Data Update: Real-time updates with subtle fade-in animation.
+Data Update:
+- Real-time updates using WebSocket connection
+- Smooth transition animation for changing values
 
 CDP Schema Fields:
-- total_purchases
-- total_spend
+- total_lifetime_value
+- total_orders
 - avg_satisfaction_score
-- customer_lifetime_value
+- campaign_response_rate
 
-API Endpoint: `/kpis`
+API Endpoint: `/api/kpis`
 
 ```json
 {
-  "total_customers": 10000,
-  "total_revenue": 1500000,
-  "avg_satisfaction": 4.2,
-  "avg_clv": 2500
+  "kpiData": [
+    {
+      "label": "Total Revenue",
+      "value": 1000000,
+      "trend": 0.05,
+      "sparklineData": [900000, 950000, 980000, 1000000]
+    },
+    {
+      "label": "Total Orders",
+      "value": 5000,
+      "trend": 0.03,
+      "sparklineData": [4800, 4900, 4950, 5000]
+    },
+    {
+      "label": "Avg Satisfaction",
+      "value": 4.5,
+      "trend": 0.02,
+      "sparklineData": [4.3, 4.4, 4.45, 4.5]
+    },
+    {
+      "label": "Campaign Response Rate",
+      "value": 0.25,
+      "trend": -0.01,
+      "sparklineData": [0.26, 0.255, 0.252, 0.25]
+    }
+  ]
 }
 ```
 
 #### b. Customer Segment Distribution (Pie Chart)
 
-Visual Description: Interactive pie chart showing the distribution of customers across segments.
+Visual Description:
+- Interactive pie chart showing customer segments
+- Legend with segment names and percentages
 
-Data Visualization: Pie chart with color-coded segments and labels.
+Data Visualization:
+- Use Plotly.js to create a responsive pie chart
+- Implement a color scheme that aligns with the overall design
 
-Interactivity: Hover to highlight segment and show percentage, click to filter dashboard by segment.
+Interactivity:
+- Hover to highlight segment and show detailed information
+- Click to filter other dashboard components by selected segment
 
-Data Update: Daily updates with smooth transition animation.
+Data Update:
+- Daily updates, with a "Last Updated" timestamp
+- Smooth transition for data changes
 
 CDP Schema Fields:
 - customer_segment
 
-API Endpoint: `/customer_segments`
+API Endpoint: `/api/customer_segments`
 
 ```json
 {
-  "segments": [
-    {"name": "High Value", "count": 2000},
-    {"name": "Medium Value", "count": 5000},
-    {"name": "Low Value", "count": 3000}
-  ]
+  "segmentData": [
+    { "segment": "High Value", "count": 1000 },
+    { "segment": "Medium Value", "count": 3000 },
+    { "segment": "Low Value", "count": 6000 }
+  ],
+  "lastUpdated": "2023-05-10T08:00:00Z"
 }
 ```
 
 #### c. Monthly Revenue Trend (Line Chart)
 
-Visual Description: Line chart showing revenue trends over the past 12 months.
+Visual Description:
+- Line chart showing revenue trends over the past 12 months
+- Y-axis representing revenue, X-axis showing months
 
-Data Visualization: Multi-line chart with option to toggle between total revenue and average order value.
+Data Visualization:
+- Plotly.js line chart with smooth curves
+- Include data points for easy reading
 
-Interactivity: Hover for tooltips with detailed monthly data, zoom and pan functionality.
+Interactivity:
+- Hover over data points to see exact values
+- Zoom and pan capabilities for detailed exploration
 
-Data Update: Monthly updates with animation for new data points.
+Data Update:
+- Monthly updates, with the option to view different time ranges
 
 CDP Schema Fields:
-- total_spend
-- avg_purchase_value
+- total_lifetime_value (aggregated monthly)
 
-API Endpoint: `/monthly_revenue`
+API Endpoint: `/api/monthly_revenue`
 
 ```json
 {
-  "months": ["Jan", "Feb", "Mar", ...],
-  "total_revenue": [100000, 120000, 110000, ...],
-  "avg_order_value": [200, 220, 210, ...]
+  "revenueData": [
+    { "month": "2022-05", "revenue": 800000 },
+    { "month": "2022-06", "revenue": 820000 },
+    // ... (data for all 12 months)
+    { "month": "2023-04", "revenue": 1000000 }
+  ],
+  "lastUpdated": "2023-05-01T00:00:00Z"
 }
 ```
 
 #### d. Top 5 Customers by Lifetime Value (Table)
 
-Visual Description: Compact table listing top 5 customers with key metrics.
+Visual Description:
+- Compact table showing customer details and lifetime value
+- Sortable columns for easy comparison
 
-Data Visualization: Sortable table with customer name, lifetime value, total purchases, and last purchase date.
+Data Visualization:
+- Ant Design Table component for structured data display
+- Include customer avatar or placeholder icon
 
-Interactivity: Click on customer name to view detailed profile, sort by columns.
+Interactivity:
+- Click on column headers to sort
+- Click on customer name to view detailed profile
 
-Data Update: Daily updates with highlight animation for changed values.
+Data Update:
+- Real-time updates as customer lifetime values change
+- Highlight newly added or changed entries
 
 CDP Schema Fields:
-- customer_id
-- first_name
-- last_name
-- customer_lifetime_value
-- total_purchases
-- last_purchase_date
+- customer_id, first_name, last_name, total_lifetime_value
 
-API Endpoint: `/top_customers`
+API Endpoint: `/api/top_customers`
 
 ```json
 {
-  "top_customers": [
+  "topCustomers": [
     {
-      "id": 1001,
+      "id": 1,
       "name": "John Doe",
-      "lifetime_value": 10000,
-      "total_purchases": 50,
-      "last_purchase": "2023-05-15"
+      "email": "john@example.com",
+      "lifetimeValue": 50000
     },
-    // ... more customers
-  ]
+    // ... (data for top 5 customers)
+  ],
+  "lastUpdated": "2023-05-10T10:30:00Z"
 }
 ```
 
 #### e. Product Category Performance (Bar Chart)
 
-Visual Description: Horizontal bar chart showing performance of product categories.
+Visual Description:
+- Horizontal bar chart showing performance by product category
+- Bars representing revenue or units sold
 
-Data Visualization: Stacked bar chart with revenue and number of purchases per category.
+Data Visualization:
+- Plotly.js horizontal bar chart
+- Color-coded bars based on performance thresholds
 
-Interactivity: Hover for detailed metrics, click to filter dashboard by category.
+Interactivity:
+- Hover to see detailed metrics
+- Click to filter other components by selected category
 
-Data Update: Weekly updates with growing/shrinking animation for bars.
+Data Update:
+- Weekly updates with option to view different time ranges
 
 CDP Schema Fields:
-- favorite_category
-- total_spend
+- favorite_category (aggregated with purchase data)
 
-API Endpoint: `/product_category_performance`
+API Endpoint: `/api/product_category_performance`
 
 ```json
 {
-  "categories": [
-    {
-      "name": "Electronics",
-      "revenue": 500000,
-      "purchases": 2500
-    },
-    // ... more categories
-  ]
+  "categoryData": [
+    { "category": "Electronics", "revenue": 500000, "units": 1000 },
+    { "category": "Clothing", "revenue": 300000, "units": 3000 },
+    // ... (data for all categories)
+  ],
+  "lastUpdated": "2023-05-07T00:00:00Z"
 }
 ```
 
 #### f. Customer Satisfaction Score (Gauge Chart)
 
-Visual Description: Semicircular gauge chart displaying overall customer satisfaction.
+Visual Description:
+- Circular gauge chart showing overall satisfaction score
+- Color-coded sections (red, yellow, green) for different satisfaction levels
 
-Data Visualization: Gauge with color-coded zones (red, yellow, green) and a needle pointing to the current score.
+Data Visualization:
+- Plotly.js gauge chart with custom styling
+- Numerical display of the current score
 
-Interactivity: Hover to show exact score and benchmark comparisons.
+Interactivity:
+- Hover to see score breakdown
+- Click to view detailed satisfaction report
 
-Data Update: Real-time updates with smooth needle animation.
+Data Update:
+- Real-time updates as new feedback is received
+- Smooth animation for score changes
 
 CDP Schema Fields:
 - avg_satisfaction_score
 
-API Endpoint: `/customer_satisfaction`
+API Endpoint: `/api/customer_satisfaction`
 
 ```json
 {
-  "current_score": 4.2,
-  "previous_score": 4.0,
-  "benchmark": 4.1
+  "satisfactionScore": 4.2,
+  "totalResponses": 1000,
+  "breakdown": {
+    "5": 400,
+    "4": 300,
+    "3": 200,
+    "2": 50,
+    "1": 50
+  },
+  "lastUpdated": "2023-05-10T11:45:00Z"
 }
 ```
 
 #### g. Churn Risk Distribution (Pie Chart)
 
-Visual Description: Pie chart showing the distribution of customers across churn risk categories.
+Visual Description:
+- Pie chart showing distribution of customers by churn risk
+- Legend with risk categories and percentages
 
-Data Visualization: Pie chart with color-coded segments (green for low risk, yellow for medium, red for high).
+Data Visualization:
+- Plotly.js pie chart with custom color scheme
+- Donut style for improved readability
 
-Interactivity: Hover to show number and percentage of customers in each risk category, click to filter dashboard.
+Interactivity:
+- Hover to highlight risk category and show customer count
+- Click to filter other components by selected risk category
 
-Data Update: Daily updates with smooth transition animation.
+Data Update:
+- Daily updates with smooth transitions
 
 CDP Schema Fields:
 - churn_risk
 
-API Endpoint: `/churn_risk`
+API Endpoint: `/api/churn_risk`
 
 ```json
 {
-  "risk_categories": [
-    {"name": "Low Risk", "count": 6000},
-    {"name": "Medium Risk", "count": 3000},
-    {"name": "High Risk", "count": 1000}
-  ]
+  "churnData": [
+    { "risk": "Low", "count": 5000 },
+    { "risk": "Medium", "count": 3000 },
+    { "risk": "High", "count": 2000 }
+  ],
+  "lastUpdated": "2023-05-10T00:00:00Z"
 }
 ```
 
 #### h. RFM Segmentation (Scatter Plot)
 
-Visual Description: 3D scatter plot representing customers based on Recency, Frequency, and Monetary value.
+Visual Description:
+- 3D scatter plot representing Recency, Frequency, and Monetary value
+- Each point represents a customer, color-coded by segment
 
-Data Visualization: Interactive 3D plot with axes for R, F, and M values, color-coded points representing customers.
+Data Visualization:
+- Plotly.js 3D scatter plot
+- Implement proper axis scaling for clear distribution
 
-Interactivity: Zoom, rotate, and pan the 3D space. Hover over points for customer details, click to view full profile.
+Interactivity:
+- Rotate and zoom the 3D plot
+- Hover over points to see customer details
+- Click to view detailed customer profile
 
-Data Update: Weekly updates with animation for point movements.
+Data Update:
+- Weekly updates with option to view different time ranges
 
 CDP Schema Fields:
 - days_since_last_purchase (Recency)
-- total_purchases (Frequency)
-- total_spend (Monetary)
+- total_orders (Frequency)
+- total_lifetime_value (Monetary)
 
-API Endpoint: `/rfm_segmentation`
+API Endpoint: `/api/rfm_segmentation`
 
 ```json
 {
-  "customers": [
+  "rfmData": [
     {
-      "id": 1001,
+      "customerId": 1,
       "recency": 5,
       "frequency": 20,
-      "monetary": 5000
+      "monetary": 5000,
+      "segment": "High Value"
     },
-    // ... more customers
-  ]
+    // ... (data for all customers)
+  ],
+  "lastUpdated": "2023-05-07T00:00:00Z"
 }
 ```
 
 ### Dashboard Interactivity and User Experience
 
-Global Filtering:
-- Date range selector affecting all components
-- Customer segment filter
-- Product category filter
-- Search bar for finding specific customers or products
+1. Global Filtering:
+   - Implement a date range picker for time-based filtering
+   - Add dropdown filters for customer segments and product categories
+   - Apply filters across all relevant components simultaneously
 
-Cross-component Data Linking:
-- Clicking on a segment in the Customer Segment Distribution chart filters all other components
-- Selecting a product category in the Product Category Performance chart updates customer lists and revenue trends
+2. Search Functionality:
+   - Add a global search bar in the header
+   - Enable searching by customer name, email, or ID
+   - Implement type-ahead suggestions for efficient searching
 
-Customization Options:
-- Drag-and-drop interface for rearranging dashboard components
-- Option to hide/show specific components
-- Ability to save custom dashboard layouts
-- Customizable color themes for charts and UI
+3. Cross-component Data Linking:
+   - Clicking on a segment in the Customer Segment Distribution chart filters other components
+   - Selecting a product category in the Product Category Performance chart updates customer lists and revenue trends
+
+4. Customization Options:
+   - Allow users to drag and drop dashboard components to rearrange layout
+   - Implement a settings panel for users to choose which KPIs to display
+   - Provide options to switch between different chart types (e.g., pie chart to bar chart)
+
+5. Responsive Design:
+   - Ensure all components adapt to different screen sizes
+   - Implement a collapsible sidebar for mobile views
+   - Use Ant Design's responsive grid system for consistent layouts
+
+6. Performance Optimization:
+   - Implement lazy loading for off-screen components
+   - Use efficient data caching mechanisms to reduce API calls
+   - Optimize large datasets by implementing pagination or infinite scrolling
+
+7. Accessibility:
+   - Ensure proper keyboard navigation throughout the dashboard
+   - Implement ARIA labels and roles for all interactive elements
+   - Provide text alternatives for all charts and graphs
+
+By implementing these features and components, the CDP application will provide a comprehensive and user-friendly interface for analyzing customer data and deriving actionable insights.
 
 ## Page 3: Architecture Visualization and Technical Considerations
 
-### Sankey Diagram Implementation using plotly
+### Sankey Diagram Implementation using Plotly
 
-The Sankey diagram provided represents the data flow in our CDP application, from source tables to the final customer_360 table. Here's how to implement and interact with it using plotly:
+The Sankey diagram provided represents the data flow in our CDP application, showcasing how data moves from source tables through temporary tables to the final customer_360 view. Here's how to implement and interact with this diagram using Plotly:
 
 1. Data Preparation:
-   - Convert the provided JSON structure into a format compatible with plotly's Sankey diagram.
-   - Create separate arrays for nodes and links.
+   - Convert the provided JSON structure into Plotly's required format
+   - Define nodes and links based on the data flow
 
 2. Plotly Implementation:
 ```javascript
-import Plot from 'react-plotly.js';
+import Plotly from 'plotly.js-dist';
 
-const SankeyDiagram = () => {
-  const data = [{
-    type: "sankey",
-    orientation: "h",
-    node: {
-      pad: 15,
-      thickness: 30,
-      line: { color: "black", width: 0.5 },
-      label: ["customer_info", "product_catalog", ...],
-      color: ["#a6cee3", "#1f78b4", ...]
-    },
-    link: {
-      source: [0, 2, 2, 1, 3, 5, 4, 6, 7, 8, 9, 10, 11, 12],
-      target: [7, 8, 9, 9, 10, 11, 11, 12, 13, 13, 13, 13, 13, 13],
-      value: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    }
-  }];
+const data = [{
+  type: "sankey",
+  orientation: "h",
+  node: {
+    pad: 15,
+    thickness: 30,
+    line: { color: "black", width: 0.5 },
+    label: ["customer_info", "purchase_transactions", "product_catalog", "customer_service", "campaign_responses", "website_behavior", "temp_basic_info", "temp_purchase_stats", "temp_favorites", "temp_customer_service", "temp_campaign_engagement", "temp_website_behavior", "customer_360"],
+    color: ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928", "#8dd3c7"]
+  },
+  link: {
+    source: [0, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    target: [6, 7, 8, 8, 9, 10, 11, 12, 12, 12, 12, 12, 12],
+    value: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  }
+}];
 
-  const layout = {
-    title: "CDP Data Flow",
-    font: { size: 10 }
-  };
-
-  return <Plot data={data} layout={layout} />;
+const layout = {
+  title: "CDP Data Flow",
+  font: { size: 10 }
 };
+
+Plotly.newPlot('sankey-container', data, layout);
 ```
 
 3. Styling:
-   - Use a color palette that distinguishes between source tables, temporary tables, and the final customer_360 table.
-   - Adjust node padding and thickness for optimal visibility.
+   - Customize colors to match the application's theme
+   - Adjust node and link opacity for better visibility
 
 4. Interactivity:
-   - Implement hover effects to show detailed information about each node and link.
-   - Add click events to highlight specific data flows.
+   - Implement hover effects to show detailed information about each node and link
+   - Add click events to highlight specific data flows
 
 5. Responsiveness:
-   - Ensure the diagram resizes appropriately for different screen sizes.
-   - Implement a zoom feature for detailed exploration on smaller screens.
+   - Use Plotly's responsive features to ensure the diagram adapts to different screen sizes
+
+6. Performance Considerations:
+   - Optimize the diagram for large datasets by aggregating less significant flows
+   - Implement lazy loading if the diagram is not immediately visible on page load
 
 ### Data Integration and Performance
 
 1. Sample Data Generation:
-   - Create a script to generate sample data that fits the CDP schema.
-   - Ensure generated data covers all possible scenarios and edge cases.
+   - Create mock data that adheres to the CDP schema structure
+   - Ensure generated data covers all possible scenarios and edge cases
 
 2. Efficient Data Loading:
-   - Implement lazy loading for dashboard components.
-   - Use pagination for large datasets (e.g., customer lists).
-   - Implement virtual scrolling for long lists to improve performance.
+   - Implement pagination for large datasets
+   - Use virtual scrolling for long lists of customers or transactions
 
 3. State Management:
-   - Use Redux for global state management.
-   - Implement Redux Toolkit for simplified Redux logic.
+   - Utilize Redux for centralized state management
+   - Implement efficient update mechanisms to reflect real-time changes
 
 4. Caching Mechanisms:
-   - Use React Query for server state management and caching.
-   - Implement service workers for offline support and faster subsequent loads.
+   - Use browser local storage for caching static data
+   - Implement Redis on the backend for frequently accessed data
 
-5. Update Strategies:
-   - Use websockets for real-time updates on critical metrics.
-   - Implement polling for less time-sensitive data.
-
-6. Error Handling:
-   - Create fallback UI components for failed data fetches.
-   - Implement retry mechanisms for failed API calls.
-   - Display user-friendly error messages with options to refresh or contact support.
+5. Error Handling:
+   - Develop comprehensive error boundaries in React
+   - Create fallback UI components for failed data loads
 
 ### Responsive Design and Cross-platform Considerations
 
@@ -404,22 +502,23 @@ const SankeyDiagram = () => {
    - Mobile: Below 768px
 
 2. Layout Adjustments:
-   - Desktop: Full dashboard layout with sidebar
-   - Tablet: Collapsible sidebar, reorganized chart layout
-   - Mobile: Full-width components, vertically stacked
+   - Desktop: Full dashboard with all components visible
+   - Tablet: Collapsible sidebar, scrollable dashboard
+   - Mobile: Stacked components, expandable/collapsible sections
 
 3. Progressive Enhancement:
-   - Implement core functionality for all devices
+   - Ensure core functionality works on all devices
    - Add advanced interactive features for devices with higher capabilities
-   - Use feature detection to provide optimal experience across different browsers and devices
 
 4. Touch Optimization:
-   - Increase touch target sizes for mobile devices
-   - Implement swipe gestures for navigation on touch devices
+   - Implement larger touch targets for mobile devices
+   - Add swipe gestures for navigating between dashboard sections on mobile
 
 5. Performance Optimization:
-   - Use code splitting to reduce initial load time
-   - Optimize images and assets for different device capabilities
+   - Use code splitting to reduce initial load time on mobile devices
+   - Optimize images and assets for different screen resolutions
+
+By following these guidelines, the CDP application will provide a seamless and efficient user experience across various devices and platforms.
 
 ## Page 4: Website Flow and API Integration
 
@@ -427,69 +526,119 @@ const SankeyDiagram = () => {
 
 ```mermaid
 graph TD
-    A[User Visits Site] --> B{Authenticated?}
-    B -->|No| C[Google SSO Login]
-    C --> D[OAuth Consent Screen]
-    D --> E[Receive OAuth Tokens]
-    E --> F[Verify Tokens]
-    F --> G[Create Session]
-    B -->|Yes| G
-    G --> H[Load Dashboard]
-    H --> I[Initialize Components]
-    I --> J[Fetch Data from APIs]
-    J --> K[Render Dashboard]
-    K --> L[User Interacts with Dashboard]
-    L --> M{Interaction Type}
-    M -->|Filter| N[Update Components]
-    M -->|Drill Down| O[Load Detailed View]
-    M -->|Customize| P[Save User Preferences]
-    N --> L
-    O --> L
-    P --> L
+    A[User Access] --> B{SSO Login}
+    B -->|Success| C[Dashboard Initialization]
+    B -->|Failure| D[Error Page]
+    C --> E[Load User Profile]
+    C --> F[Fetch Dashboard Data]
+    F --> G[Render Dashboard Components]
+    G --> H[User Interaction]
+    H --> I[Update Components]
+    H --> J[Filter Data]
+    H --> K[Navigate to Detailed Views]
 ```
+
+1. User Journey:
+   - User accesses the application URL
+   - SSO login screen is presented
+   - Upon successful authentication, user is redirected to the main dashboard
+   - Dashboard initializes and loads user-specific data
+   - User can interact with various components, apply filters, and navigate to detailed views
+
+2. Authentication to Main Application Transition:
+   - After successful SSO login, a loading screen is displayed
+   - User profile data is fetched and stored in the application state
+   - Dashboard layout is prepared based on user preferences (if available)
+
+3. Dashboard Initialization Process:
+   - Skeleton UI is displayed to improve perceived performance
+   - Critical data (KPIs, customer segments) is loaded first
+   - Less critical components are loaded asynchronously
+   - WebSocket connection is established for real-time updates
+
+4. User Interactions Within Dashboard:
+   - Global filters affect all relevant components simultaneously
+   - Clicking on chart elements updates related components
+   - Detailed views are loaded on-demand to optimize performance
 
 ### API Integration
 
-The dashboard integrates with backend APIs using the following endpoints:
+```mermaid
+sequenceDiagram
+    participant F as Frontend
+    participant B as Backend
+    participant DB as Database
+    F->>B: Request dashboard data
+    B->>DB: Query data
+    DB-->>B: Return raw data
+    B->>B: Process and aggregate data
+    B-->>F: Send formatted data
+    F->>F: Render dashboard components
+    F->>B: Real-time update request
+    B-->>F: WebSocket updates
+```
 
-1. `/kpis`: Fetches key performance indicators
-2. `/customer_segments`: Retrieves customer segment distribution
-3. `/monthly_revenue`: Gets monthly revenue trend data
-4. `/top_customers`: Fetches top 5 customers by lifetime value
-5. `/product_category_performance`: Retrieves product category performance data
-6. `/customer_satisfaction`: Gets overall customer satisfaction score
-7. `/churn_risk`: Fetches churn risk distribution data
-8. `/rfm_segmentation`: Retrieves RFM segmentation data for scatter plot
+API Endpoints and Data Fetching:
 
-Data Fetching Process:
-1. On dashboard initialization, make parallel API calls to all endpoints
-2. Use React Query for efficient data fetching and caching
-3. Implement loading states for each component while data is being fetched
-4. Handle API errors gracefully with error boundaries and retry mechanisms
+1. KPIs: `/api/kpis`
+   - Fetches aggregated data for key performance indicators
+   - Updates in real-time via WebSocket
 
-API Response Handling:
-1. Validate API responses against expected schema
-2. Transform data as needed for each visualization component
-3. Update global state with new data
-4. Trigger re-renders of affected components
+2. Customer Segments: `/api/customer_segments`
+   - Retrieves customer segment distribution
+   - Updates daily, with caching for improved performance
 
-Error Cases:
-1. Network errors: Implement exponential backoff for retries
-2. Data format errors: Log error, display fallback UI, and notify developers
-3. Authorization errors: Redirect to login page if session has expired
+3. Monthly Revenue: `/api/monthly_revenue`
+   - Fetches revenue data for the past 12 months
+   - Implements date range parameters for flexible querying
+
+4. Top Customers: `/api/top_customers`
+   - Retrieves data for top 5 customers by lifetime value
+   - Updates in real-time, with optimistic UI updates
+
+5. Product Category Performance: `/api/product_category_performance`
+   - Fetches performance data for each product category
+   - Allows filtering by date range and category
+
+6. Customer Satisfaction: `/api/customer_satisfaction`
+   - Retrieves overall satisfaction score and breakdown
+   - Updates in real-time as new feedback is received
+
+7. Churn Risk: `/api/churn_risk`
+   - Fetches distribution of customers by churn risk
+   - Updates daily, with trend analysis over time
+
+8. RFM Segmentation: `/api/rfm_segmentation`
+   - Retrieves RFM (Recency, Frequency, Monetary) data for all customers
+   - Implements pagination for efficient loading of large datasets
 
 ### Data Refresh and Real-time Updates
 
-1. Implement websocket connection for real-time updates on critical metrics (e.g., KPIs, satisfaction score)
-2. Use polling for less time-sensitive data:
-   - Customer segments: Daily updates
-   - Revenue trends: Hourly updates
-   - Product performance: Daily updates
-3. Implement a "Refresh" button for manual data updates
-4. Use React Query's built-in refetching capabilities for automatic background updates
-5. Implement optimistic UI updates for immediate feedback on user actions
+1. Keeping Dashboard Data Current:
+   - Implement a combination of pull-based and push-based updates
+   - Use WebSockets for real-time updates on critical metrics (KPIs, satisfaction scores)
+   - Set up periodic polling for less time-sensitive data (monthly trends, segment distributions)
 
-By following this comprehensive design document, UI developers will have a clear roadmap for building a robust, user-friendly, and data-rich CDP application that fully utilizes the provided schema and meets the complex data visualization needs of the project.
+2. Real-time Update Implementation:
+   - Establish WebSocket connection on dashboard initialization
+   - Listen for specific event types (e.g., 'kpi_update', 'new_customer')
+   - Update relevant components without full page refresh
+
+3. Optimistic Updates:
+   - Implement optimistic UI updates for user actions (e.g., changing customer segment)
+   - Revert changes if server update fails, ensuring data consistency
+
+4. Caching and Performance:
+   - Utilize browser caching for static assets and infrequently changing data
+   - Implement server-side caching (e.g., Redis) for frequently accessed data
+   - Use ETags and conditional requests to minimize unnecessary data transfer
+
+5. Error Handling and Retry Mechanisms:
+   - Implement exponential backoff for failed API requests
+   - Provide clear error messages and retry options for users
+   - Log errors on the server-side for monitoring and debugging
+
+By implementing this comprehensive API integration and real-time update strategy, the CDP application will provide users with up-to-date, accurate data while maintaining optimal performance and user experience.
 
 # Customer Compass 360 Backend API Documentation
 

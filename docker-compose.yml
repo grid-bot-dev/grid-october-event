@@ -22,7 +22,7 @@ services:
     networks:
       - app-network
     volumes:
-      - /home/msingh/.config:/root/.config
+      - /home/ksoni/.config:/root/.config
 
 networks:
   app-network:

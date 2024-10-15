@@ -47,8 +47,8 @@ async def api_get_product_category_performance():
 
 @app.get("/api/customer_satisfaction")
 async def api_get_customer_satisfaction():
-    return JSONResponse( message = "successfully conected")
-    # return JSONResponse(content=await backend_logic.get_customer_satisfaction())
+    # return JSONResponse( message = "successfully conected")
+    return JSONResponse(content=await backend_logic.get_customer_satisfaction())
 
 
 @app.get("/api/churn_risk")
